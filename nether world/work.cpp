@@ -4,6 +4,7 @@
 #include<random>
 #include <mmsystem.h>
 #pragma comment(lib, "Winmm.lib")
+#include<string>
 inline void putimage_alpha(int x, int y, IMAGE* img)
 {
 	HDC dstDC = GetImageHDC();
@@ -22,7 +23,7 @@ int work() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 std::uniform_int_distribution<> dis(0, 17);
-	IMAGE office, office_, yes,Yes,YES,no,No,NO;
+	IMAGE office, office_, yes,Yes,YES,no,No,NO,num;
 	character person[18] = {//有19种回答组
 		character("Michael","28","我是一个作家，至少我这样称呼自己。","我总是试图找寻人生的方向，没想到一次意外直接给了我答案——但这并非无法接受，因为我只是生命的承受者。","npc_1.png","npc1.png","frame.png"),
 		character("Michael","28","作家","非常不幸，我在睡着的时候被砸死了，但事实就是这样。","npc_1.png","npc1.png","frame.png"),
@@ -52,9 +53,11 @@ std::uniform_int_distribution<> dis(0, 17);
 	loadimage(&NO, "no_05.png", 120, 140);
 	loadimage(&Yes, "yes_04.png", 120, 140);
 	loadimage(&YES, "yes_05.png", 120, 140);
+	loadimage(&num, "num.png", 1200, 800);
 	Sleep(500);
 	bool mouse,start=0;//更新鼠标点击
 	int i = 1,temp=0,next=0,index;
+	count = 0;//每次进入work函数时重置count，防止重复进入work函数时count叠加
 	character random;//先随机第一个人物的立绘和卡片，
 	//进入循环后如果i自增，则检测到进入下一个人物，再随机一个立绘和卡片
 		while (i < 7) {//一轮游戏六个人物，结束后进入balatro
@@ -105,11 +108,11 @@ std::uniform_int_distribution<> dis(0, 17);
 							if (random.update(msg))
 								random.sayage();
 							else {
-								random.init(195, 280, 100, 45);
+								random.init(195, 250, 100, 45);
 								if (random.update(msg))
 									random.saycareer();
 								else {
-									random.init(195, 340, 180, 40);
+									random.init(195, 300, 180, 40);
 									if (random.update(msg))
 										random.saystory();
 
@@ -138,5 +141,16 @@ std::uniform_int_distribution<> dis(0, 17);
 		}
 		mciSendString("stop bgm", NULL, 0, NULL);
 		mciSendString("close bgm", NULL, 0, NULL);
+		mciSendString("open distant-bell-tower-of-the-basilica-of-the-national-sanctuary-of-the-immaculate-conception.mp3 alias bgm2", NULL, 0, NULL);
+		mciSendString("play bgm2 from 0", NULL, 0, NULL);
+		putimage(0,0,&num);
+		
+		settextstyle(240, 0, _T("Copperplate Gothic Bold"));
+		settextcolor(WHITE);
+		std::string c = std::to_string(count);
+		outtextxy(555, 275, c.c_str());
+		FlushBatchDraw();
+		Sleep(5000);
+		mciSendString("close bgm2", NULL, 0, NULL);
 	return 3;
 }

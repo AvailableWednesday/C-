@@ -48,16 +48,20 @@ int card() {
     std::mt19937 gen(rd());
 	std::vector<Card> curr;//现在屏幕上发到的牌
     loadAll();
-	IMAGE desk, hand;
+	IMAGE desk, hand,win,lose;
     loadimage(&hand, "hand.png", 1150, 650);
 	loadimage(&desk, "desk.png", 1200, 800);
+	loadimage(&win, "win.png", 1200, 800);
+	loadimage(&lose, "lose.png", 1200, 800);
     int accomplish = count * 65 + 350;
     int judgetype(std::vector<Card>a);
     for (int row = 0; row < 3; ) {//每次游戏共三局
         std::shuffle(poker.begin(), poker.end(), gen);//使用随机数引擎进行洗牌
-        //每局发四次牌，屏幕上显示共八张牌
+        std::vector <Card> poker = setpoker();
+        std::shuffle(poker.begin(), poker.end(), gen);
         times = 1;
         score_row = 0;
+        curr.clear();
         for (int i = 0; i < 8; i++) {
             Card c = poker.back(); // 取最后一张
             poker.pop_back();      // 弹出
@@ -68,7 +72,7 @@ int card() {
             BeginBatchDraw();
             cleardevice();
             putimage(0, 0, &desk);
-            for (int i = 0; i<currj; i++) {
+            for (int i = 0; i<currj; i++) {//在画面中显示当前持有的小丑牌
                 int x = 450 + i * 100;
                 int y = 20;
                 IMAGE* img = &currjoker[i].front;//缩小原牌面
@@ -82,7 +86,7 @@ int card() {
             }
             setlinecolor(WHITE);
             settextcolor(BLACK);
-            settextstyle(25, 0, _T("Consolas"));
+            settextstyle(25, 0, _T("微软雅黑 Bold"));
             rectangle(30, 260, 230, 340);
             outtextxy(40, 270, _T("牌型:"));
             outtextxy(40, 370, _T("得分:"));
@@ -204,14 +208,41 @@ int card() {
         coin += score_row /50;
         EndBatchDraw();
         while (peekmessage(&msg, EX_MOUSE | EX_KEY));
+        if(row!=2)
         joker();
         row++;
-		accomplish += row * 120;//每局目标分数递增
+		accomplish += row * 140;//每局目标分数递增
         BeginBatchDraw(); // 从商店回来后重新开启绘制
     }
-    if(score_all<2) 
-	return 3;
-    else return 4;
+    if (score_all < 2)//结算画面
+    {
+        while (true) {
+            BeginBatchDraw();
+            putimage(0, 0, &lose);
+            while (peekmessage(&msg, EM_MOUSE)) {
+                if (msg.message == WM_LBUTTONDOWN && msg.x < 750 && msg.y < 765 && msg.x>450 && msg.y>685) {
+                    EndBatchDraw();
+                    return 2;//重新开始
+                }
+            }
+            FlushBatchDraw();
+        }
+       
+    }
+    else {
+       
+        while (true) {
+            BeginBatchDraw();
+            putimage(0, 0, &win);
+            while (peekmessage(&msg, EM_MOUSE)) {
+                if (msg.message == WM_LBUTTONDOWN && msg.x < 750 && msg.y < 765 && msg.x>450 && msg.y>685) {
+                    EndBatchDraw();
+                    return 2;//重新开始
+                }
+            }
+            FlushBatchDraw();
+        }
+    }
 }
 int countscore(std::vector<Card> a) {//牌型判断函数，返回单次打出牌的得分
     int add=0;
@@ -362,10 +393,10 @@ int judgetype(std::vector<Card> a) {//牌型判断函数，返回单次打出牌的得分
             break;
         }
     }
-    // 顺子判定 (仅针对 5 张牌的情况)
+    // 顺子判定 (仅针对5张牌的情况)
     bool isStraight = false;
     if (a.size() == 5) {
-        // 普通顺子 (例如 2-3-4-5-6)
+        // 普通顺子
         if (a[4].num - a[0].num == 4 && freq.size() == 5) {
             isStraight = true;
         }

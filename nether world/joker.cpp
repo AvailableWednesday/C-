@@ -3,10 +3,13 @@
 #include <random>
 #include<string>
 #include"joker.h"
+#include <mmsystem.h>
+#pragma comment(lib, "Winmm.lib")
 extern ExMessage msg;
 extern int coin;extern int currj;
 extern Joker currjoker[3];
 void joker() {
+	mciSendString("open sound-take-one-coin-from-the-bag.mp3 alias coin", NULL, 0, NULL);
 	IMAGE shop, joker[10], jokerback[10], jokerpicked[10];
 	Joker card[10];
 	loadimage(&shop, "shop.png", 1200, 800);
@@ -49,6 +52,7 @@ void joker() {
 			}
 			if ((msg.x >= 345 && msg.x <= 655 && msg.y >= 610 && msg.y <= 720) && msg.message == WM_LBUTTONDOWN) {
 				if (coin >= 1) {
+					mciSendString("play coin from 0", NULL, 0, NULL);
 					coin -= 1;
 					for (int i = 0; i < 4; i++) {
 						random[i] = card[dis(gen)];
@@ -64,11 +68,12 @@ void joker() {
 							currjoker[currj] = random[i];
 							currj++;
 							random[i].onsale = 0;
+							mciSendString("play coin from 0", NULL, 0, NULL);
 						}
 					}
 				}
 			}
-			if (msg.x >= 740 && msg.x <= 970 && msg.y >= 685 && msg.y <= 770 && msg.message == WM_LBUTTONDOWN)//Ìø¹ý
+			if (msg.x >= 840 && msg.x <= 1070 && msg.y >= 685 && msg.y <= 770 && msg.message == WM_LBUTTONDOWN)//Ìø¹ý
 			{
 				EndBatchDraw();
 				return;

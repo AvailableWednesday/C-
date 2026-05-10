@@ -17,6 +17,10 @@ inline void putimage_alpha(int x, int y, IMAGE* img)
 int count=0;
 extern ExMessage msg;
 int work() {
+	settextstyle(
+	34, 0, _T("Î¢ÈíÑÅºÚ"));
+	settextcolor(WHITE);
+	setbkmode(TRANSPARENT);
 	mciSendString("open colorful-adventures_88142.mp3 alias bgm", NULL, 0, NULL);
 	mciSendString("open sound5.mp3 alias next", NULL, 0, NULL);
 	mciSendString("play bgm repeat", NULL, 0, NULL);

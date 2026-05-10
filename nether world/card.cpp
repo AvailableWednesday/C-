@@ -163,6 +163,7 @@ int card() {
                     score_time = countscore(selected_);
                     if (dusk)  score_time *= 2;
                     score_row += score_time;
+                    if (score_row >= accomplish) break;
                     for (int i = (int)location.size() - 1; i >= 0; i--) {
                         curr.erase(curr.begin() + location[i]);
                     } // 从 curr 中移除打出的牌
@@ -205,13 +206,16 @@ int card() {
 
         }//一局得分
         if (accomplish <= score_row) score_all++;
-        coin += score_row /50;
+        coin += score_row/50;
         EndBatchDraw();
         while (peekmessage(&msg, EX_MOUSE | EX_KEY));
         if(row!=2)
         joker();
         row++;
-		accomplish += row * 140;//每局目标分数递增
+        if(row==1)
+		accomplish*=1.4;//每局目标分数递增
+        if(row==2)
+		accomplish *= 1.6;
         BeginBatchDraw(); // 从商店回来后重新开启绘制
     }
     if (score_all < 2)//结算画面

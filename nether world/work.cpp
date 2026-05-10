@@ -28,7 +28,7 @@ int work() {
 	std::mt19937 gen(rd());
 std::uniform_int_distribution<> dis(0, 17);
 	IMAGE office, office_, yes,Yes,YES,no,No,NO,num;
-	character person[18] = {//有19种回答组
+	character person[18] = {//有18种回答组
 		character("Michael","28","我是一个作家，至少我这样称呼自己。","我总是试图找寻人生的方向，没想到一次意外直接给了我答案——但这并非无法接受，因为我只是生命的承受者。","npc_1.png","npc1.png","frame.png"),
 		character("Michael","28","作家","非常不幸，我在睡着的时候被砸死了，但事实就是这样。","npc_1.png","npc1.png","frame.png"),
 		character("Emma Johnson","19","我还没有从学校毕业呢","我不知道……我还无法接受最后的记忆是一场幻觉，我也无法接受我的死亡——明明一切都在慢慢变好，不是吗？","npc_2.png","npc2.png","frame.png"),
